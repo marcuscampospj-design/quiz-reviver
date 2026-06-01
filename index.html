@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="Um espaço seguro para entender o que sua família está vivendo e descobrir caminhos de apoio.">
+<title>Instituto Reviver — Avaliação Familiar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --yellow:      #FFD700;
+  --yellow-dark: #E6B800;
+  --yellow-deep: #C9A200;
+  --yellow-glow: rgba(255,215,0,.20);
+  --yellow-tint: #FFFBE6;
+  --red:         #CC0000;
+  --red-dark:    #A30000;
+  --red-glow:    rgba(204,0,0,.12);
+  --cream:       #FFFDF5;
+  --cream-dark:  #F5F0E8;
+  --ink:         #1A1A1A;
+  --ink-mid:     #4A4040;
+  --ink-soft:    #7A7070;
+  --border:      rgba(26,20,20,.10);
+  --border-yel:  rgba(255,215,0,.40);
+  --white:       #ffffff;
+  --max-w:       480px;
+  --r-sm:        10px;
+  --r-md:        14px;
+  --r-lg:        20px;
+  --r-xl:        28px;
+  --ease-out:    cubic-bezier(.22,1,.36,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background: var(--cream-dark);
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  background: var(--cream);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* ══════════════════════════════
+   PROGRESS BAR
+══════════════════════════════ */
+.progress-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--cream);
+  border-bottom: 1px solid var(--border);
+}
+.progress-track {
+  height: 3px;
+  background: var(--cream-dark);
+  width: 100%;
+}
+.progress-fill {
+  height: 3px;
+  background: linear-gradient(90deg, var(--yellow-dark), var(--yellow));
+  transition: width 0.6s var(--ease-out);
+  border-radius: 0 3px 3px 0;
+  position: relative;
+}
+/* Shimmer on progress fill */
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 40px; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+  animation: shimmer 1.5s ease infinite;
+}
+@keyframes shimmer {
+  0%   { transform: translateX(-40px); opacity: 0; }
+  50%  { opacity: 1; }
+  100% { transform: translateX(40px);  opacity: 0; }
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px 9px;
+}
+.progress-block {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.progress-count {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+/* ══════════════════════════════
+   SCREENS
+══════════════════════════════ */
+.screen { display: none; flex: 1; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ══════════════════════════════
+   HOME
+══════════════════════════════ */
+.home-inner {
+  padding: 36px 24px 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.home-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--yellow-tint);
+  border: 1px solid var(--border-yel);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  animation: fadeSlideDown .5s var(--ease-out) both;
+}
+.home-eyebrow-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: pulse 2.2s ease infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .4; transform: scale(1.4); }
+}
+
+.home-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(27px, 7vw, 36px);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -.02em;
+  animation: fadeSlideUp .5s .1s var(--ease-out) both;
+}
+.home-title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--yellow);
+}
+
+.home-divider {
+  width: 40px; height: 2px;
+  background: var(--yellow);
+  border-radius: 2px;
+  margin-bottom: 20px;
+  animation: expandWidth .6s .2s var(--ease-out) both;
+}
+@keyframes expandWidth {
+  from { width: 0; opacity: 0; }
+  to   { width: 40px; opacity: 1; }
+}
+
+.home-sub {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--ink-mid);
+  line-height: 1.75;
+  margin-bottom: 28px;
+  animation: fadeSlideUp .5s .2s var(--ease-out) both;
+}
+
+/* Callout de acolhimento */
+.home-callout {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--red);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  padding: 14px 16px;
+  margin-bottom: 28px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  animation: fadeSlideUp .5s .25s var(--ease-out) both;
+}
+.home-callout strong { color: var(--ink); font-weight: 700; }
+
+.trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+  animation: fadeSlideUp .5s .3s var(--ease-out) both;
+}
+.trust-chip {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 13px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-mid);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.trust-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
+
+.cta-start {
+  width: 100%;
+  background: var(--yellow);
+  border: none;
+  color: var(--red);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 18px 24px;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  letter-spacing: .01em;
+  transition: background .18s, transform .12s var(--ease-spring), box-shadow .18s;
+  box-shadow: 0 4px 24px var(--yellow-glow), 0 1px 3px rgba(0,0,0,.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  -webkit-appearance: none;
+  position: relative;
+  overflow: hidden;
+  animation: fadeSlideUp .5s .35s var(--ease-out) both;
+}
+.cta-start::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 60%);
+}
+.cta-start:active {
+  background: var(--yellow-dark);
+  transform: scale(.97);
+  box-shadow: 0 2px 10px var(--yellow-glow);
+}
+
+/* Ripple effect */
+.cta-start .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,.3);
+  transform: scale(0);
+  animation: ripple .6s linear;
+  pointer-events: none;
+}
+@keyframes ripple {
+  to { transform: scale(4); opacity: 0; }
+}
+
+.time-note {
+  margin-top: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  letter-spacing: .04em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: center;
+  animation: fadeSlideUp .5s .4s var(--ease-out) both;
+}
+
+/* ══════════════════════════════
+   BLOCK TRANSITION CARD
+   (mensagem entre blocos)
+══════════════════════════════ */
+.block-transition {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+.block-transition.active { display: flex; }
+
+.bt-logo {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.12);
+  animation: bounceIn .5s var(--ease-spring) both;
+}
+@keyframes bounceIn {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.1); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+.bt-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  animation: fadeSlideUp .4s .1s var(--ease-out) both;
+}
+.bt-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(20px, 5.5vw, 26px);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+  margin-bottom: 12px;
+  letter-spacing: -.01em;
+  animation: fadeSlideUp .4s .15s var(--ease-out) both;
+}
+.bt-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink-mid);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  animation: fadeSlideUp .4s .2s var(--ease-out) both;
+}
+.bt-btn {
+  background: var(--yellow);
+  border: none;
+  color: var(--red);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  padding: 15px 32px;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background .15s, transform .1s var(--ease-spring);
+  box-shadow: 0 4px 20px var(--yellow-glow);
+  -webkit-appearance: none;
+  animation: fadeSlideUp .4s .25s var(--ease-out) both;
+}
+.bt-btn:active { background: var(--yellow-dark); transform: scale(.97); }
+
+/* ══════════════════════════════
+   QUIZ
+══════════════════════════════ */
+.quiz-inner {
+  padding: 24px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.q-number {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.q-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(18px, 5vw, 23px);
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 6px;
+  letter-spacing: -.01em;
+}
+
+.q-hint {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.q-hint-icon {
+  width: 16px; height: 16px;
+  background: var(--yellow-tint);
+  border: 1px solid var(--border-yel);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 9px;
+}
+
+.q-spacer { height: 18px; }
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 24px;
+}
+
+/* Opção entra com stagger */
+.opt {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 15px 16px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-mid);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  -webkit-appearance: none;
+  line-height: 1.3;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  /* Motion: entrada staggered via JS inline style */
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    border-color .15s,
+    background .15s,
+    transform .12s var(--ease-spring),
+    box-shadow .15s,
+    opacity .0s;
+}
+.opt.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    border-color .15s,
+    background .15s,
+    transform .2s var(--ease-spring),
+    box-shadow .15s,
+    opacity .25s var(--ease-out);
+}
+.opt:active  { transform: scale(.984); }
+.opt:hover   { border-color: var(--border-yel); background: var(--yellow-tint); }
+.opt.sel     {
+  border-color: var(--yellow);
+  background: var(--yellow-tint);
+  color: var(--red);
+  font-weight: 600;
+  box-shadow: 0 0 0 3px var(--yellow-glow), 0 1px 3px rgba(0,0,0,.04);
+  transform: scale(1.01);
+}
+
+/* Radio */
+.opt-indicator {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid #ddd5c0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .15s, background .15s, transform .15s var(--ease-spring);
+}
+.opt.sel .opt-indicator {
+  border-color: var(--yellow-deep);
+  background: var(--yellow);
+  transform: scale(1.1);
+}
+.opt-indicator-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity .15s, transform .2s var(--ease-spring);
+}
+.opt.sel .opt-indicator-dot { opacity: 1; transform: scale(1); }
+
+/* Checkbox */
+.opt-checkbox {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  border: 2px solid #ddd5c0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .15s, background .15s, transform .15s var(--ease-spring);
+}
+.opt.sel .opt-checkbox { background: var(--yellow); border-color: var(--yellow-deep); transform: scale(1.1); }
+.opt-checkbox svg {
+  width: 12px; height: 12px;
+  fill: none; stroke: var(--red);
+  stroke-width: 2.5;
+  stroke-linecap: round; stroke-linejoin: round;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity .15s, transform .2s var(--ease-spring);
+}
+.opt.sel .opt-checkbox svg { opacity: 1; transform: scale(1); }
+
+/* ── NAV ── */
+.nav-row {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+.btn-back {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  color: var(--ink-soft);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 13px 18px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  -webkit-appearance: none;
+  transition: background .15s, transform .1s;
+}
+.btn-back:active { background: var(--cream-dark); transform: scale(.97); }
+.btn-back svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.btn-next {
+  flex: 1;
+  background: var(--yellow);
+  border: none;
+  color: var(--red);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  padding: 14px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: background .15s, transform .12s var(--ease-spring), box-shadow .15s;
+  -webkit-appearance: none;
+  box-shadow: 0 3px 14px var(--yellow-glow);
+}
+.btn-next svg { width: 17px; height: 17px; fill: none; stroke: var(--red); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.btn-next:active { background: var(--yellow-dark); transform: scale(.97); }
+.btn-next:disabled { background: #FFE066; box-shadow: none; cursor: not-allowed; transform: none; opacity: .5; }
+
+/* ══════════════════════════════
+   RESULTADO
+══════════════════════════════ */
+.result-inner {
+  padding: 24px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.result-banner {
+  border-radius: var(--r-xl);
+  padding: 26px 22px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeSlideUp .5s var(--ease-out) both;
+}
+.result-banner::before {
+  content: '';
+  position: absolute;
+  top: -50px; right: -50px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+}
+.result-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -30px; left: -20px;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+}
+
+.result-emoji {
+  font-size: 38px;
+  margin-bottom: 12px;
+  line-height: 1;
+  display: block;
+  animation: bounceIn .6s .1s var(--ease-spring) both;
+}
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  background: rgba(255,255,255,.55);
+  backdrop-filter: blur(4px);
+  animation: fadeSlideUp .4s .15s var(--ease-out) both;
+}
+.result-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(17px, 5vw, 21px);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 12px;
+  letter-spacing: -.01em;
+  animation: fadeSlideUp .4s .2s var(--ease-out) both;
+}
+.result-text {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.75;
+  opacity: .85;
+  animation: fadeSlideUp .4s .25s var(--ease-out) both;
+}
+
+/* Protocolo card */
+.protocolo-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 20px 18px;
+  margin-bottom: 16px;
+  animation: fadeSlideUp .5s .3s var(--ease-out) both;
+}
+.protocolo-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.protocolo-title {
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.protocolo-text {
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Axes */
+.axes-wrap {
+  margin-bottom: 20px;
+  animation: fadeSlideUp .5s .35s var(--ease-out) both;
+}
+.axes-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.axes-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.ax-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 11px 4px;
+  text-align: center;
+  transition: transform .2s var(--ease-spring);
+}
+.ax-card:hover { transform: translateY(-2px); }
+.ax-lbl { font-size: 9px; font-weight: 700; color: var(--ink-soft); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 4px; }
+.ax-val { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1; }
+.ax-max { font-size: 9px; color: #bbb; font-weight: 600; margin-top: 1px; }
+
+/* CTAs resultado */
+.cta-result {
+  width: 100%;
+  background: var(--yellow);
+  border: none;
+  color: var(--red);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 17px;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  letter-spacing: .01em;
+  transition: background .15s, transform .12s var(--ease-spring);
+  -webkit-appearance: none;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 20px var(--yellow-glow);
+  animation: fadeSlideUp .5s .4s var(--ease-out) both;
+}
+.cta-result:active { background: var(--yellow-dark); transform: scale(.98); }
+
+.btn-restart {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  color: var(--ink-soft);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 13px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  -webkit-appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: background .15s;
+  animation: fadeSlideUp .5s .45s var(--ease-out) both;
+}
+.btn-restart:active { background: var(--cream-dark); }
+.btn-restart svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── PERFIS ── */
+.perfil-verde   .result-banner { background: linear-gradient(135deg,#c8f0dc,#e8faf0); color: #145c2a; }
+.perfil-verde   .result-badge  { color: #1a7a3a; }
+.perfil-verde   .result-title  { color: #0f4520; }
+.perfil-verde   .result-text   { color: #2a5a38; }
+.perfil-amarelo .result-banner { background: linear-gradient(135deg,#fce9b0,#fff8e0); color: #7a5800; }
+.perfil-amarelo .result-badge  { color: #7a5800; }
+.perfil-amarelo .result-title  { color: #4a3400; }
+.perfil-amarelo .result-text   { color: #5c4410; }
+.perfil-laranja .result-banner { background: linear-gradient(135deg,#ffd4b8,#fff0e8); color: #7a3010; }
+.perfil-laranja .result-badge  { color: #7a3010; }
+.perfil-laranja .result-title  { color: #4a1800; }
+.perfil-laranja .result-text   { color: #5c2a10; }
+.perfil-vermelho .result-banner { background: linear-gradient(135deg,#fbbdd0,#fdeef4); color: #8b1a1a; }
+.perfil-vermelho .result-badge  { color: #8b1a1a; }
+.perfil-vermelho .result-title  { color: #5c0f0f; }
+.perfil-vermelho .result-text   { color: #6b1f1f; }
+
+/* ── ANIMAÇÕES BASE ── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── DESKTOP ── */
+@media (min-width: 500px) {
+  body { padding: 32px 16px; }
+  #app {
+    border-radius: 28px;
+    min-height: auto;
+    box-shadow: 0 12px 60px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+    overflow: hidden;
+  }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progress-wrap" style="display:none">
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+    <div class="progress-labels">
+      <span class="progress-block" id="blk-label"></span>
+      <span class="progress-count" id="q-count"></span>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="screen active" id="s-home">
+    <div class="home-inner">
+      <div style="align-self:center; margin-bottom: 20px; animation: fadeSlideDown .4s var(--ease-out) both;">
+        <img src="IMG_0353.PNG" alt="Instituto Reviver" style="width:90px; height:90px; object-fit:contain; border-radius:50%; box-shadow: 0 4px 16px rgba(0,0,0,.12);">
+      </div>
+      <div class="home-eyebrow" style="align-self:center;">
+        <span class="home-eyebrow-dot"></span>
+        Espaço seguro e gratuito
+      </div>
+      <h1 class="home-title" style="text-align:center;">Entenda os sinais e descubra possíveis caminhos de apoio</h1>
+      <div class="home-divider" style="align-self:center;"></div>
+      <p class="home-sub">
+        Se alguém que você ama está lutando contra o álcool, drogas ou jogos, você sabe o quanto isso pesa. Este questionário foi feito para ajudar você a entender o que está acontecendo e encontrar um caminho de apoio.
+      </p>
+      <div class="home-callout">
+        <strong>100% gratuito e confidencial.</strong> Suas respostas ficam apenas aqui. Ao final, você recebe um protocolo de apoio personalizado, sem custo algum.
+      </div>
+      <div class="trust-row">
+        <span class="trust-chip"><span class="dot"></span> Respostas privadas</span>
+        <span class="trust-chip"><span class="dot"></span> 21 perguntas</span>
+        <span class="trust-chip"><span class="dot"></span> ~5 minutos</span>
+      </div>
+      <button class="cta-start" onclick="startQuiz()">Começar avaliação gratuita</button>
+      <div class="time-note">⏱ Leva em média 5 minutos</div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="s-quiz">
+    <div class="quiz-inner" id="quiz-inner">
+      <p class="q-number" id="q-number"></p>
+      <p class="q-title"  id="q-title"></p>
+      <div id="q-hint" class="q-hint" style="display:none">
+        <span class="q-hint-icon">+</span>
+        Selecione todas que se aplicam
+      </div>
+      <div class="q-spacer" id="q-spacer"></div>
+      <div class="options-list" id="opt-list"></div>
+      <div class="nav-row">
+        <button class="btn-back" id="btn-back" onclick="goBack()">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Voltar
+        </button>
+        <button class="btn-next" id="btn-next" onclick="goNext()" disabled style="display:none">
+          <span id="btn-next-label">Confirmar</span>
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="screen" id="s-result">
+    <div class="result-inner" id="result-inner">
+      <div class="result-banner" id="r-banner">
+        <span class="result-emoji" id="r-emoji"></span>
+        <div class="result-badge"  id="r-badge"></div>
+        <div class="result-title"  id="r-title"></div>
+        <div class="result-text"   id="r-text"></div>
+      </div>
+      <div class="protocolo-card" id="protocolo-card">
+        <div class="protocolo-label">Protocolo gratuito</div>
+        <div class="protocolo-title" id="protocolo-title"></div>
+        <div class="protocolo-text"  id="protocolo-text"></div>
+      </div>
+      <div class="axes-wrap">
+        <div class="axes-section-label">Pontuação por eixo</div>
+        <div class="axes-grid" id="axes-grid"></div>
+      </div>
+      <button class="cta-result" id="cta-result">Acessar meu protocolo gratuito →</button>
+      <button class="btn-restart" onclick="startQuiz()">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+        Refazer a avaliação
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── MICROCOPY: Mensagens entre blocos ─────────────────────────────────
+const BLOCK_TRANSITIONS = {
+  2: {
+    label: 'Bloco 2 de 5',
+    title: 'Você está fazendo a coisa certa',
+    text:  'Perceber que algo está errado já é um passo enorme. Vamos entender um pouco mais sobre os comportamentos que você está observando.',
+    cta:   'Continuar'
+  },
+  3: {
+    label: 'Bloco 3 de 5',
+    title: 'Você não está sozinha nessa',
+    text:  'Milhares de famílias passam por situações parecidas. As próximas perguntas nos ajudam a entender o nível de risco envolvido.',
+    cta:   'Continuar'
+  },
+  4: {
+    label: 'Bloco 4 de 5',
+    title: 'Sua saúde emocional também importa',
+    text:  'Cuidar de quem sofre com dependência é exaustivo. Queremos entender como você está, não apenas o seu familiar.',
+    cta:   'Continuar'
+  },
+  5: {
+    label: 'Últimas perguntas',
+    title: 'Estamos quase lá',
+    text:  'Você chegou até aqui. As últimas perguntas nos ajudam a entender a disposição para mudança e personalizar melhor o seu protocolo.',
+    cta:   'Finalizar avaliação'
+  }
+};
+
+// ── DADOS ─────────────────────────────────────────────────────────────
+const QS = [
+  { id:1,  blk:1, blkName:'Bloco 1: Identificação',        multi:false, axis:null,
+    title:'Quem é a pessoa que você deseja ajudar?',
+    opts:[{l:'Filho(a)',v:0},{l:'Esposo(a)',v:0},{l:'Irmão(ã)',v:0},{l:'Pai ou Mãe',v:0},{l:'Outro familiar',v:0}]
+  },
+  { id:2,  blk:1, blkName:'Bloco 1: Identificação',        multi:false, axis:null,
+    title:'Qual a faixa etária dessa pessoa?',
+    opts:[{l:'Menor de 18 anos',v:0},{l:'18 a 25 anos',v:0},{l:'26 a 35 anos',v:0},{l:'36 a 50 anos',v:0},{l:'Mais de 50 anos',v:0}]
+  },
+  { id:3,  blk:1, blkName:'Bloco 1: Identificação',        multi:false, axis:null,
+    title:'Qual situação mais preocupa você atualmente?',
+    opts:[{l:'Uso frequente de álcool',v:0},{l:'Uso de cocaína',v:0},{l:'Uso de crack',v:0},{l:'Uso excessivo de maconha',v:0},{l:'Jogos e apostas compulsivas',v:0},{l:'Mistura de substâncias',v:0},{l:'Ainda não consigo identificar',v:0}]
+  },
+  { id:4,  blk:1, blkName:'Bloco 1: Identificação',        multi:false, axis:null,
+    title:'Há quanto tempo você percebe esse comportamento?',
+    opts:[{l:'Há poucos meses',v:0},{l:'Entre 1 e 2 anos',v:0},{l:'Entre 3 e 5 anos',v:0},{l:'Há muitos anos',v:0}]
+  },
+  { id:5,  blk:2, blkName:'Bloco 2: Sinais de Compulsão',  multi:false, axis:'A',
+    title:'Essa pessoa já tentou parar ou diminuir e não conseguiu?',
+    opts:[{l:'Não, nunca tentou',v:0},{l:'Tentou algumas vezes',v:1},{l:'Tentou muitas vezes e não consegue',v:2}]
+  },
+  { id:6,  blk:2, blkName:'Bloco 2: Sinais de Compulsão',  multi:false, axis:'A',
+    title:'Você percebe que o comportamento piorou ao longo do tempo?',
+    opts:[{l:'Não, continua igual',v:0},{l:'Piorou um pouco',v:1},{l:'Piorou bastante',v:2}]
+  },
+  { id:7,  blk:2, blkName:'Bloco 2: Sinais de Compulsão',  multi:false, axis:'A',
+    title:'Quando fica sem usar ou sem jogar, ela fica irritada, ansiosa ou diferente?',
+    opts:[{l:'Não percebi isso',v:0},{l:'Às vezes sim',v:1},{l:'Quase sempre',v:2}]
+  },
+  { id:8,  blk:2, blkName:'Bloco 2: Sinais de Compulsão',  multi:false, axis:'A',
+    title:'Ela costuma esconder, mentir ou minimizar o problema?',
+    opts:[{l:'Não, é aberta sobre isso',v:0},{l:'Às vezes esconde',v:1},{l:'Frequentemente nega ou mente',v:2}]
+  },
+  { id:9,  blk:2, blkName:'Bloco 2: Sinais de Compulsão',  multi:true,  axis:'B',
+    title:'O comportamento já trouxe consequências em alguma dessas áreas?',
+    opts:[{l:'Trabalho ou emprego',v:1},{l:'Estudos',v:1},{l:'Relação com a família',v:1},{l:'Outros relacionamentos',v:1},{l:'Saúde física ou mental',v:1},{l:'Situação financeira',v:1},{l:'Não identifiquei nenhuma',v:0,excl:true}]
+  },
+  { id:10, blk:2, blkName:'Bloco 2: Sinais de Compulsão',  multi:false, axis:'A',
+    title:'Mesmo vendo as consequências, ela continua com o comportamento?',
+    opts:[{l:'Não, tenta evitar',v:0},{l:'Às vezes recai',v:1},{l:'Sim, continua do mesmo jeito',v:2}]
+  },
+  { id:11, blk:3, blkName:'Bloco 3: Risco e Urgência',     multi:true,  axis:'BC',
+    title:'Você já presenciou alguma dessas situações?',
+    opts:[{l:'Agressividade verbal ou física',v:1},{l:'Violência verbal',v:2},{l:'Violência física',v:3,red:true},{l:'Sumiços e desaparecimentos',v:2,red:true},{l:'Dias sem dormir',v:2},{l:'Crises emocionais intensas',v:2,red:true},{l:'Nunca presenciei nada disso',v:0,excl:true}]
+  },
+  { id:12, blk:3, blkName:'Bloco 3: Risco e Urgência',     multi:true,  axis:'BC',
+    title:'Existe algum impacto financeiro relacionado ao comportamento?',
+    opts:[{l:'Dívidas que se acumulam',v:1},{l:'Empréstimos frequentes',v:1},{l:'Venda de objetos ou bens da família',v:3,red:true},{l:'Gastos escondidos',v:2},{l:'Não percebi impacto financeiro',v:0,excl:true}]
+  },
+  { id:13, blk:3, blkName:'Bloco 3: Risco e Urgência',     multi:false, axis:'C',
+    title:'Você já sentiu medo do comportamento dessa pessoa?',
+    opts:[{l:'Nunca senti medo',v:0},{l:'Já senti algumas vezes',v:2},{l:'Sinto medo com frequência',v:4,red:true}]
+  },
+  { id:14, blk:3, blkName:'Bloco 3: Risco e Urgência',     multi:false, axis:'D',
+    title:'Ela aceita conversar sobre ajuda ou tratamento?',
+    opts:[{l:'Sim, está aberta',v:0},{l:'Às vezes aceita',v:1},{l:'Recusa qualquer conversa',v:2}]
+  },
+  { id:15, blk:4, blkName:'Bloco 4: Impacto na Família',   multi:true,  axis:'E',
+    title:'Como você tem se sentido emocionalmente com tudo isso?',
+    opts:[{l:'Cansada(o)',v:1},{l:'Ansiosa(o)',v:1},{l:'Com medo',v:1},{l:'Sem esperança',v:1},{l:'Me sentindo culpada(o)',v:1},{l:'Perdida(o) sem saber o que fazer',v:1},{l:'Emocionalmente esgotada(o)',v:1}]
+  },
+  { id:16, blk:4, blkName:'Bloco 4: Impacto na Família',   multi:false, axis:'E',
+    title:'Você sente que perdeu o controle da situação em casa?',
+    opts:[{l:'Não, ainda consigo lidar',v:0},{l:'Em partes sim',v:1},{l:'Sim, está fora do meu controle',v:2}]
+  },
+  { id:17, blk:4, blkName:'Bloco 4: Impacto na Família',   multi:false, axis:'E',
+    title:'Esse problema tem afetado a sua própria saúde emocional?',
+    opts:[{l:'Não muito',v:0},{l:'Um pouco',v:1},{l:'Muito, já não sei como lidar',v:3}]
+  },
+  { id:18, blk:4, blkName:'Bloco 4: Impacto na Família',   multi:false, axis:'E',
+    title:'Você sente que sua família carrega esse peso em silêncio?',
+    opts:[{l:'Não, conseguimos conversar',v:0},{l:'Às vezes sim',v:1},{l:'Sim, ninguém fala abertamente',v:2}]
+  },
+  { id:19, blk:5, blkName:'Bloco 5: Prontidão para Mudança', multi:false, axis:'D',
+    title:'No fundo, ela reconhece que precisa de ajuda?',
+    opts:[{l:'Sim, reconhece',v:0},{l:'Às vezes demonstra isso',v:1},{l:'Não, nega completamente',v:3}]
+  },
+  { id:20, blk:5, blkName:'Bloco 5: Prontidão para Mudança', multi:false, axis:null,
+    title:'Ela já buscou algum tipo de ajuda antes?',
+    opts:[{l:'Sim, já tentou tratamento',v:0},{l:'Não, nunca buscou',v:0}]
+  },
+  { id:21, blk:5, blkName:'Bloco 5: Prontidão para Mudança', multi:false, axis:null,
+    title:'O que parece ser o maior obstáculo para a mudança hoje?',
+    opts:[{l:'A negação dela',v:0},{l:'O ambiente e os amigos',v:0},{l:'As recaídas constantes',v:0},{l:'Falta de apoio da família',v:0},{l:'Questões emocionais não resolvidas',v:0},{l:'Ainda não consigo identificar',v:0}]
+  }
+];
+
+// ── PERFIS ────────────────────────────────────────────────────────────
+const PERFIS = {
+  verde: {
+    emoji: '🌱', badge: 'Sinal de Alerta Inicial', cls: 'perfil-verde',
+    title: 'Você percebeu cedo. Isso faz toda a diferença.',
+    text:  'Os sinais identificados sugerem um estágio inicial. Esse é o momento mais poderoso para agir, antes que o padrão se aprofunde. Com as orientações certas, você pode apoiar uma mudança real.',
+    protocolo_title: 'Guia de Primeiros Passos para Famílias',
+    protocolo_text:  'Como iniciar conversas difíceis, estabelecer limites saudáveis e encontrar recursos de apoio na sua região. Tudo reunido num guia prático e gratuito.'
+  },
+  amarelo: {
+    emoji: '💛', badge: 'Dependência em Progressão', cls: 'perfil-amarelo',
+    title: 'O problema existe, e você não precisa enfrentá-lo sozinha.',
+    text:  'Os sinais mostram que o comportamento compulsivo já está afetando a vida da sua família de formas concretas. O momento de buscar apoio estruturado é agora, e existe caminho.',
+    protocolo_title: 'Protocolo de Apoio Familiar',
+    protocolo_text:  'Estratégias práticas para famílias que convivem com dependência em progressão: como se proteger emocionalmente, comunicar melhor e acessar suporte especializado.'
+  },
+  laranja: {
+    emoji: '🧡', badge: 'Dependência Grave', cls: 'perfil-laranja',
+    title: 'O sofrimento da sua família merece atenção e suporte especializado.',
+    text:  'As respostas indicam um quadro intenso, com impactos sérios no bem-estar de todos. Você e sua família merecem apoio real, não apenas orientações genéricas, mas acompanhamento especializado.',
+    protocolo_title: 'Protocolo de Suporte Intensivo para Famílias',
+    protocolo_text:  'Um protocolo estruturado com orientações clínicas, recursos de apoio imediato e um passo a passo para famílias em situação de dependência grave.'
+  },
+  vermelho: {
+    emoji: '❤️', badge: 'Atenção Prioritária', cls: 'perfil-vermelho',
+    title: 'Você e sua família precisam de apoio agora. Há ajuda disponível.',
+    text:  'Os sinais identificados indicam uma situação de risco elevado, com impacto severo no bem-estar emocional e segurança da família. Você não precisa lidar com isso sozinha.',
+    protocolo_title: 'Protocolo de Apoio Imediato',
+    protocolo_text:  'Orientações específicas para situações de risco, contatos de apoio imediato e um plano estruturado para proteger você e sua família com segurança.'
+  }
+};
+
+// ── ESTADO ────────────────────────────────────────────────────────────
+let cur = 0, ans = {}, pendingTransition = false;
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function scrollTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('app').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Ripple no CTA da home
+document.querySelector('.cta-start')?.addEventListener('click', function(e) {
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  const rect = this.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  this.appendChild(r);
+  setTimeout(() => r.remove(), 700);
+});
+
+// ── START ─────────────────────────────────────────────────────────────
+function startQuiz() {
+  cur = 0; ans = {}; pendingTransition = false;
+  document.getElementById('progress-wrap').style.display = 'block';
+  showScreen('s-quiz');
+  renderQuestion();
+  scrollTop();
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────
+// renderQuestion: chamado ao navegar entre perguntas — anima o container inteiro
+// updateMultiState: chamado ao clicar em opção multi — só atualiza .sel, sem recriar DOM
+
+function renderQuestion() {
+  const q     = QS[cur];
+  const total = QS.length;
+  const pct   = Math.round(((cur + 1) / total) * 100);
+
+  document.getElementById('prog-fill').style.width  = pct + '%';
+  document.getElementById('blk-label').textContent  = q.blkName;
+  document.getElementById('q-count').textContent    = (cur + 1) + ' de ' + total;
+  document.getElementById('q-number').textContent   = 'Pergunta ' + q.id;
+  document.getElementById('q-title').textContent    = q.title;
+  document.getElementById('q-hint').style.display   = q.multi ? 'flex' : 'none';
+  document.getElementById('q-spacer').style.height  = q.multi ? '0' : '4px';
+  document.getElementById('btn-back').disabled      = cur === 0;
+
+  // Anima container só na navegação entre perguntas
+  const inner = document.getElementById('quiz-inner');
+  inner.style.animation = 'none';
+  void inner.offsetWidth;
+  inner.style.animation = 'fadeSlideUp .28s var(--ease-out) both';
+
+  const saved = ans[q.id] || [];
+  const list  = document.getElementById('opt-list');
+  list.innerHTML = '';
+
+  q.opts.forEach((opt, i) => {
+    const isSel = saved.includes(i);
+    const btn   = document.createElement('button');
+    btn.className = 'opt' + (isSel ? ' sel' : '');
+    btn.type = 'button';
+    btn.dataset.idx = i;
+
+    if (q.multi) {
+      btn.innerHTML = `<span class="opt-checkbox" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>${opt.l}`;
+    } else {
+      btn.innerHTML = `<span class="opt-indicator" aria-hidden="true"><span class="opt-indicator-dot"></span></span>${opt.l}`;
+    }
+
+    // Stagger de entrada
+    setTimeout(() => btn.classList.add('visible'), i * 55);
+
+    btn.addEventListener('click', () => {
+      if (q.multi) {
+        // Atualiza estado
+        if (opt.excl) {
+          ans[q.id] = [i];
+        } else {
+          let c = ans[q.id] || [];
+          const exclIdx = q.opts.findIndex(o => o.excl);
+          c = c.filter(x => x !== exclIdx);
+          const pos = c.indexOf(i);
+          if (pos === -1) c.push(i); else c.splice(pos, 1);
+          ans[q.id] = c;
+        }
+        // Atualiza só o visual das opções, sem recriar o DOM inteiro
+        updateMultiState(q);
+      } else {
+        ans[q.id] = [i];
+        document.querySelectorAll('.opt').forEach(b => b.classList.remove('sel'));
+        btn.classList.add('sel');
+        setTimeout(goNext, 300);
+      }
+    });
+
+    list.appendChild(btn);
+  });
+
+  syncNextBtn(q);
+  scrollTop();
+}
+
+// Atualiza apenas as classes .sel das opções multi sem recriar nada
+function updateMultiState(q) {
+  const saved = ans[q.id] || [];
+  document.querySelectorAll('#opt-list .opt').forEach(btn => {
+    const i = parseInt(btn.dataset.idx, 10);
+    if (saved.includes(i)) {
+      btn.classList.add('sel');
+    } else {
+      btn.classList.remove('sel');
+    }
+  });
+  syncNextBtn(q);
+}
+
+// Sincroniza estado do botão Confirmar
+function syncNextBtn(q) {
+  const hasAns  = (ans[q.id] || []).length > 0;
+  const btnNext = document.getElementById('btn-next');
+  if (q.multi) {
+    btnNext.style.display = 'flex';
+    btnNext.disabled = !hasAns;
+    document.getElementById('btn-next-label').textContent = cur === QS.length - 1 ? 'Ver resultado' : 'Confirmar';
+  } else {
+    btnNext.style.display = 'none';
+  }
+}
+
+// ── TRANSIÇÃO ENTRE BLOCOS ────────────────────────────────────────────
+function showBlockTransition(blkNum, callback) {
+  const data = BLOCK_TRANSITIONS[blkNum];
+  if (!data) { callback(); return; }
+
+  // Injeta dinamicamente na tela de quiz
+  const quizInner = document.getElementById('quiz-inner');
+  quizInner.style.display = 'none';
+
+  let overlay = document.getElementById('blk-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'blk-overlay';
+    overlay.className = 'block-transition';
+    document.getElementById('s-quiz').appendChild(overlay);
+  }
+
+  overlay.innerHTML = `
+    <img src="IMG_0353.PNG" alt="Instituto Reviver" class="bt-logo">
+    <div class="bt-label">${data.label}</div>
+    <div class="bt-title">${data.title}</div>
+    <div class="bt-text">${data.text}</div>
+    <button class="bt-btn" onclick="dismissTransition()">${data.cta}</button>
+  `;
+  overlay.classList.add('active');
+
+  window._transitionCallback = callback;
+}
+
+function dismissTransition() {
+  const overlay   = document.getElementById('blk-overlay');
+  const quizInner = document.getElementById('quiz-inner');
+  if (overlay)   { overlay.classList.remove('active'); }
+  if (quizInner) { quizInner.style.display = 'flex'; }
+  if (window._transitionCallback) { window._transitionCallback(); }
+}
+
+// ── NAVEGAÇÃO ─────────────────────────────────────────────────────────
+function goNext() {
+  if (cur >= QS.length - 1) { showResult(); return; }
+
+  const currentBlk = QS[cur].blk;
+  const nextBlk    = QS[cur + 1].blk;
+
+  cur++;
+
+  if (nextBlk !== currentBlk && BLOCK_TRANSITIONS[nextBlk]) {
+    showBlockTransition(nextBlk, () => renderQuestion());
+  } else {
+    renderQuestion();
+  }
+}
+
+function goBack() {
+  // Se overlay estiver ativo, fecha ele
+  const overlay = document.getElementById('blk-overlay');
+  if (overlay && overlay.classList.contains('active')) {
+    cur--;
+    dismissTransition();
+    renderQuestion();
+    return;
+  }
+  if (cur > 0) { cur--; renderQuestion(); }
+}
+
+// ── CÁLCULO ───────────────────────────────────────────────────────────
+function calcScore() {
+  let A=0,B=0,C=0,D=0,E=0,red=false;
+  QS.forEach(q => {
+    (ans[q.id]||[]).forEach(i => {
+      const o = q.opts[i]; if(!o) return;
+      if(o.red) red = true;
+      const v = o.v||0;
+      if(q.axis==='A')  A+=v;
+      if(q.axis==='B')  B+=v;
+      if(q.axis==='BC') { B+=v; C+=v; }
+      if(q.axis==='C')  C+=v;
+      if(q.axis==='D')  D+=v;
+      if(q.axis==='E')  E+=v;
+    });
+  });
+  A=Math.min(A,10); B=Math.min(B,25); D=Math.min(D,5); E=Math.min(E,14);
+  let prof;
+  if(red)                        prof='vermelho';
+  else if(A>6 && E>8)            prof='laranja';
+  else if((A>=3&&A<=5) || B>5)   prof='amarelo';
+  else if(A<3 && C<4)            prof='verde';
+  else if(A>5)                   prof='laranja';
+  else                           prof='amarelo';
+  return {A,B,C,D,E,prof};
+}
+
+// ── RESULTADO ─────────────────────────────────────────────────────────
+function showResult() {
+  const {A,B,C,D,E,prof} = calcScore();
+  const p = PERFIS[prof];
+
+  document.getElementById('result-inner').className = 'result-inner ' + p.cls;
+  document.getElementById('r-emoji').textContent    = p.emoji;
+  document.getElementById('r-badge').textContent    = p.badge;
+  document.getElementById('r-title').textContent    = p.title;
+  document.getElementById('r-text').textContent     = p.text;
+  document.getElementById('protocolo-title').textContent = p.protocolo_title;
+  document.getElementById('protocolo-text').textContent  = p.protocolo_text;
+
+  document.getElementById('axes-grid').innerHTML = [
+    {lbl:'Compulsão',  v:A, m:10},
+    {lbl:'Gravidade',  v:B, m:25},
+    {lbl:'Risco',      v:C, m:null},
+    {lbl:'Resistência',v:D, m:5},
+    {lbl:'Família',    v:E, m:14}
+  ].map((a,i) => `
+    <div class="ax-card" style="animation: fadeSlideUp .4s ${.1+i*.07}s var(--ease-out) both">
+      <div class="ax-lbl">${a.lbl}</div>
+      <div class="ax-val">${a.v}</div>
+      ${a.m ? `<div class="ax-max">/${a.m}</div>` : ''}
+    </div>`).join('');
+
+  document.getElementById('prog-fill').style.width  = '100%';
+  document.getElementById('blk-label').textContent  = 'Resultado';
+  document.getElementById('q-count').textContent    = '';
+
+  showScreen('s-result');
+  scrollTop();
+}
+</script>
+</body>
+</html>
