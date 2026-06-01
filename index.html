@@ -7,7 +7,7 @@
 <title>Instituto Reviver — Avaliação Familiar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -41,7 +41,7 @@ html, body {
   width: 100%;
   min-height: 100%;
   background: var(--cream-dark);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
 }
@@ -168,19 +168,23 @@ body::before {
 }
 
 .home-title {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(27px, 7vw, 36px);
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(24px, 6.5vw, 34px);
   font-weight: 700;
   color: var(--ink);
-  line-height: 1.15;
+  line-height: 1.2;
   margin-bottom: 20px;
-  letter-spacing: -.02em;
+  letter-spacing: -.025em;
   animation: fadeSlideUp .5s .1s var(--ease-out) both;
 }
 .home-title em {
-  font-style: italic;
-  font-weight: 300;
-  color: var(--yellow);
+  font-style: normal;
+  font-weight: 800;
+  color: var(--yellow-deep);
+  background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-deep));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .home-divider {
@@ -246,7 +250,7 @@ body::before {
   background: var(--yellow);
   border: none;
   color: var(--red);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 16px;
   font-weight: 800;
   padding: 18px 24px;
@@ -341,13 +345,13 @@ body::before {
   animation: fadeSlideUp .4s .1s var(--ease-out) both;
 }
 .bt-title {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(20px, 5.5vw, 26px);
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(19px, 5vw, 24px);
   font-weight: 700;
   color: var(--ink);
   line-height: 1.25;
   margin-bottom: 12px;
-  letter-spacing: -.01em;
+  letter-spacing: -.02em;
   animation: fadeSlideUp .4s .15s var(--ease-out) both;
 }
 .bt-text {
@@ -362,7 +366,7 @@ body::before {
   background: var(--yellow);
   border: none;
   color: var(--red);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 15px;
   font-weight: 800;
   padding: 15px 32px;
@@ -395,13 +399,13 @@ body::before {
 }
 
 .q-title {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(18px, 5vw, 23px);
-  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(16px, 4.5vw, 21px);
+  font-weight: 600;
   color: var(--ink);
-  line-height: 1.3;
+  line-height: 1.35;
   margin-bottom: 6px;
-  letter-spacing: -.01em;
+  letter-spacing: -.02em;
 }
 
 .q-hint {
@@ -441,7 +445,7 @@ body::before {
   border-radius: var(--r-md);
   padding: 15px 16px;
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 15px;
   font-weight: 500;
   color: var(--ink-mid);
@@ -544,7 +548,7 @@ body::before {
   background: var(--white);
   border: 1.5px solid var(--border);
   color: var(--ink-soft);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 14px;
   font-weight: 600;
   padding: 13px 18px;
@@ -565,7 +569,7 @@ body::before {
   background: var(--yellow);
   border: none;
   color: var(--red);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 15px;
   font-weight: 800;
   padding: 14px;
@@ -641,12 +645,12 @@ body::before {
   animation: fadeSlideUp .4s .15s var(--ease-out) both;
 }
 .result-title {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(17px, 5vw, 21px);
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(15px, 4.5vw, 19px);
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.3;
   margin-bottom: 12px;
-  letter-spacing: -.01em;
+  letter-spacing: -.02em;
   animation: fadeSlideUp .4s .2s var(--ease-out) both;
 }
 .result-text {
@@ -675,12 +679,13 @@ body::before {
   margin-bottom: 8px;
 }
 .protocolo-title {
-  font-family: 'Fraunces', serif;
-  font-size: 17px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 6px;
   line-height: 1.3;
+  letter-spacing: -.01em;
 }
 .protocolo-text {
   font-size: 13px;
@@ -713,7 +718,7 @@ body::before {
 }
 .ax-card:hover { transform: translateY(-2px); }
 .ax-lbl { font-size: 9px; font-weight: 700; color: var(--ink-soft); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 4px; }
-.ax-val { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1; }
+.ax-val { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1; }
 .ax-max { font-size: 9px; color: #bbb; font-weight: 600; margin-top: 1px; }
 
 /* CTAs resultado */
@@ -722,7 +727,7 @@ body::before {
   background: var(--yellow);
   border: none;
   color: var(--red);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 16px;
   font-weight: 800;
   padding: 17px;
@@ -742,7 +747,7 @@ body::before {
   background: var(--white);
   border: 1.5px solid var(--border);
   color: var(--ink-soft);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 14px;
   font-weight: 600;
   padding: 13px;
@@ -796,6 +801,48 @@ body::before {
     box-shadow: 0 12px 60px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
     overflow: hidden;
   }
+}
+
+/* ── MOBILE REFINEMENTS ── */
+@media (max-width: 390px) {
+  .home-inner { padding: 28px 18px 36px; }
+  .home-title { font-size: 22px; }
+  .home-sub { font-size: 14px; }
+  .home-callout { font-size: 12.5px; padding: 12px 14px; }
+  .trust-row { gap: 6px; }
+  .trust-chip { font-size: 11px; padding: 6px 11px; }
+  .cta-start { font-size: 15px; padding: 16px 20px; }
+  .quiz-inner { padding: 20px 16px 24px; }
+  .q-title { font-size: 15px; }
+  .opt { padding: 14px 14px; font-size: 14px; gap: 11px; }
+  .opt-indicator, .opt-checkbox { width: 20px; height: 20px; }
+  .btn-back { padding: 13px 14px; font-size: 13px; }
+  .btn-next { font-size: 14px; padding: 14px 12px; }
+  .result-inner { padding: 20px 16px 36px; }
+  .result-banner { padding: 22px 18px; }
+  .result-emoji { font-size: 32px; }
+  .axes-grid { gap: 5px; }
+  .ax-card { padding: 10px 3px; }
+  .ax-lbl { font-size: 8px; }
+  .ax-val { font-size: 19px; }
+  .cta-result { font-size: 15px; padding: 15px; }
+  .protocolo-card { padding: 16px 14px; }
+  .bt-title { font-size: 18px; }
+  .block-transition { padding: 32px 18px; }
+}
+
+/* Ensure tap targets are always at least 44px tall on mobile */
+@media (max-width: 499px) {
+  .opt { min-height: 52px; }
+  .btn-back, .btn-next { min-height: 48px; }
+  .cta-start, .cta-result { min-height: 54px; }
+  .bt-btn { min-height: 50px; }
+  /* Better readability for body text on mobile */
+  .home-sub { font-size: 14.5px; line-height: 1.8; }
+  .result-text { font-size: 13.5px; }
+  .protocolo-text { font-size: 12.5px; }
+  /* Avoid text overflow in axes grid */
+  .ax-lbl { word-break: break-word; }
 }
 </style>
 </head>
