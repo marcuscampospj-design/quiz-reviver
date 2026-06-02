@@ -184,11 +184,11 @@ body::before {
 .home-title em {
   font-style: normal;
   font-weight: 800;
-  color: var(--yellow);
-  background: none;
-  -webkit-background-clip: unset;
-  -webkit-text-fill-color: var(--yellow);
-  background-clip: unset;
+  color: var(--yellow-deep);
+  background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-deep));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .home-divider {
@@ -853,6 +853,75 @@ body::before {
   /* Avoid text overflow in axes grid */
   .ax-lbl { word-break: break-word; }
 }
+
+/* ══════════════════════════════
+   VSL PLAYER
+══════════════════════════════ */
+.vsl-wrap {
+  width: 100%;
+  margin-bottom: 20px;
+  animation: fadeSlideUp .5s .1s var(--ease-out) both;
+}
+.vsl-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.vsl-player {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: #1a1a1a;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,.18);
+}
+.vsl-player iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+.vsl-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+  color: #fff;
+  gap: 12px;
+  cursor: pointer;
+}
+.vsl-play-btn {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s var(--ease-spring);
+}
+.vsl-play-btn:hover { transform: scale(1.1); }
+.vsl-play-btn svg { width: 22px; height: 22px; fill: var(--red); margin-left: 3px; }
+.vsl-placeholder-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,.7);
+  text-align: center;
+  padding: 0 20px;
+  line-height: 1.5;
+}
+.vsl-logo {
+  width: 44px; height: 44px;
+  object-fit: contain;
+  border-radius: 50%;
+  opacity: .85;
+}
 </style>
 </head>
 <body>
@@ -930,6 +999,18 @@ body::before {
         <div class="result-title"  id="r-title"></div>
         <div class="result-text"   id="r-text"></div>
       </div>
+      <div class="vsl-wrap">
+        <div class="vsl-label">Mensagem do Pastor Juarez</div>
+        <div class="vsl-player">
+          <div class="vsl-placeholder" id="vsl-placeholder">
+            <img src="IMG_0353.PNG" alt="Instituto Reviver" class="vsl-logo">
+            <div class="vsl-play-btn">
+              <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <div class="vsl-placeholder-text">Vídeo do Pastor Juarez<br><span style="font-size:11px;opacity:.6">(em breve disponível)</span></div>
+          </div>
+        </div>
+      </div>
       <div class="protocolo-card" id="protocolo-card">
         <div class="protocolo-label">Protocolo gratuito</div>
         <div class="protocolo-title" id="protocolo-title"></div>
@@ -939,7 +1020,7 @@ body::before {
         <div class="axes-section-label">Pontuação por eixo</div>
         <div class="axes-grid" id="axes-grid"></div>
       </div>
-      <button class="cta-result" id="cta-result">Acessar meu protocolo gratuito →</button>
+      <button class="cta-result" id="cta-result" onclick="">Acessar meu relatório completo →</button>
       <button class="btn-restart" onclick="startQuiz()">
         <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
         Refazer a avaliação
@@ -1353,6 +1434,17 @@ function showResult() {
   document.getElementById('prog-fill').style.width  = '100%';
   document.getElementById('blk-label').textContent  = 'Resultado';
   document.getElementById('q-count').textContent    = '';
+
+  // Redirect button to correct profile page
+  const profilePages = {
+    verde:    'resultado-verde.html',
+    amarelo:  'resultado-amarelo.html',
+    laranja:  'resultado-laranja.html',
+    vermelho: 'resultado-vermelho.html'
+  };
+  document.getElementById('cta-result').onclick = () => {
+    window.location.href = profilePages[prof];
+  };
 
   showScreen('s-result');
   scrollTop();
