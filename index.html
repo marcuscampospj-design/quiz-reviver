@@ -184,11 +184,8 @@ body::before {
 .home-title em {
   font-style: normal;
   font-weight: 800;
-  color: var(--yellow-deep);
-  background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-deep));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--yellow);
+  -webkit-text-fill-color: var(--yellow);
 }
 
 .home-divider {
@@ -870,59 +867,64 @@ body::before {
   text-transform: uppercase;
   margin-bottom: 8px;
 }
-.vsl-player {
+.vsl-player-wistia {
   width: 100%;
-  aspect-ratio: 16/9;
+  max-width: 300px;
+  margin: 0 auto;
   border-radius: var(--r-lg);
   overflow: hidden;
   background: #1a1a1a;
-  position: relative;
-  box-shadow: 0 4px 20px rgba(0,0,0,.18);
+  box-shadow: 0 6px 24px rgba(0,0,0,.20);
 }
-.vsl-player iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
+.vsl-player-wistia wistia-player {
   display: block;
-}
-.vsl-placeholder {
   width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-  color: #fff;
-  gap: 12px;
-  cursor: pointer;
+  border-radius: var(--r-lg);
+  overflow: hidden;
 }
-.vsl-play-btn {
-  width: 56px; height: 56px;
-  border-radius: 50%;
-  background: var(--yellow);
+.vsl-hint {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform .2s var(--ease-spring);
-}
-.vsl-play-btn:hover { transform: scale(1.1); }
-.vsl-play-btn svg { width: 22px; height: 22px; fill: var(--red); margin-left: 3px; }
-.vsl-placeholder-text {
+  gap: 8px;
+  margin-top: 16px;
   font-size: 13px;
   font-weight: 600;
-  color: rgba(255,255,255,.7);
+  color: var(--ink-soft);
   text-align: center;
-  padding: 0 20px;
-  line-height: 1.5;
+  line-height: 1.4;
+  padding: 0 12px;
 }
-.vsl-logo {
-  width: 44px; height: 44px;
-  object-fit: contain;
+.vsl-hint-spinner {
+  width: 14px; height: 14px;
+  border: 2px solid var(--yellow);
+  border-top-color: transparent;
   border-radius: 50%;
-  opacity: .85;
+  flex-shrink: 0;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Conteúdo bloqueado até o fim da VSL */
+.result-locked {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity .6s var(--ease-out);
+  pointer-events: none;
+}
+.result-locked.revealed {
+  max-height: none;
+  opacity: 1;
+  overflow: visible;
+  pointer-events: auto;
+  animation: fadeSlideUp .6s var(--ease-out) both;
 }
 </style>
+<script src="https://fast.wistia.com/player.js" async></script>
+<script src="https://fast.wistia.com/embed/4jt6xkjixz.js" async type="module"></script>
+<script>window._wq = window._wq || [];</script>
+<style>wistia-player[media-id='4jt6xkjixz']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/4jt6xkjixz/swatch'); display: block; filter: blur(5px); padding-top:177.78%; }</style>
 </head>
 <body>
 <div id="app">
@@ -993,38 +995,43 @@ body::before {
   <!-- RESULTADO -->
   <div class="screen" id="s-result">
     <div class="result-inner" id="result-inner">
-      <div class="result-banner" id="r-banner">
-        <span class="result-emoji" id="r-emoji"></span>
-        <div class="result-badge"  id="r-badge"></div>
-        <div class="result-title"  id="r-title"></div>
-        <div class="result-text"   id="r-text"></div>
-      </div>
-      <div class="vsl-wrap">
+
+      <!-- VSL aparece primeiro, sozinha -->
+      <div class="vsl-wrap" id="vsl-wrap">
         <div class="vsl-label">Mensagem do Pastor Juarez</div>
-        <div class="vsl-player">
-          <div class="vsl-placeholder" id="vsl-placeholder">
-            <img src="IMG_0353.PNG" alt="Instituto Reviver" class="vsl-logo">
-            <div class="vsl-play-btn">
-              <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            </div>
-            <div class="vsl-placeholder-text">Vídeo do Pastor Juarez<br><span style="font-size:11px;opacity:.6">(em breve disponível)</span></div>
-          </div>
+        <div class="vsl-player-wistia">
+          <wistia-player media-id="4jt6xkjixz" aspect="0.5625"></wistia-player>
+        </div>
+        <div class="vsl-hint" id="vsl-hint">
+          <span class="vsl-hint-spinner"></span>
+          Assista ao vídeo para liberar o seu protocolo completo
         </div>
       </div>
-      <div class="protocolo-card" id="protocolo-card">
-        <div class="protocolo-label">Protocolo gratuito</div>
-        <div class="protocolo-title" id="protocolo-title"></div>
-        <div class="protocolo-text"  id="protocolo-text"></div>
+
+      <!-- Resto do conteúdo, oculto até o tempo da VSL -->
+      <div class="result-locked" id="result-locked">
+        <div class="result-banner" id="r-banner">
+          <span class="result-emoji" id="r-emoji"></span>
+          <div class="result-badge"  id="r-badge"></div>
+          <div class="result-title"  id="r-title"></div>
+          <div class="result-text"   id="r-text"></div>
+        </div>
+        <div class="protocolo-card" id="protocolo-card">
+          <div class="protocolo-label">Protocolo gratuito</div>
+          <div class="protocolo-title" id="protocolo-title"></div>
+          <div class="protocolo-text"  id="protocolo-text"></div>
+        </div>
+        <div class="axes-wrap">
+          <div class="axes-section-label">Pontuação por eixo</div>
+          <div class="axes-grid" id="axes-grid"></div>
+        </div>
+        <button class="cta-result" id="cta-result" onclick="">Acessar meu relatório completo →</button>
+        <button class="btn-restart" onclick="startQuiz()">
+          <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+          Refazer a avaliação
+        </button>
       </div>
-      <div class="axes-wrap">
-        <div class="axes-section-label">Pontuação por eixo</div>
-        <div class="axes-grid" id="axes-grid"></div>
-      </div>
-      <button class="cta-result" id="cta-result" onclick="">Acessar meu relatório completo →</button>
-      <button class="btn-restart" onclick="startQuiz()">
-        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
-        Refazer a avaliação
-      </button>
+
     </div>
   </div>
 
@@ -1448,6 +1455,43 @@ function showResult() {
 
   showScreen('s-result');
   scrollTop();
+
+  // ── VSL: revelar conteúdo após o tempo do vídeo ──────────────────
+  startVslReveal();
+}
+
+// Tempo de delay em segundos (2min30s = 150s)
+const VSL_DELAY_SECONDS = 150;
+
+function startVslReveal() {
+  const locked = document.getElementById('result-locked');
+  const hint   = document.getElementById('vsl-hint');
+  if (!locked || locked.classList.contains('revealed')) return;
+
+  let revealed = false;
+  const reveal = () => {
+    if (revealed) return;
+    revealed = true;
+    locked.classList.add('revealed');
+    if (hint) hint.style.display = 'none';
+  };
+
+  // 1) Timer de segurança: revela após o tempo definido
+  const timer = setTimeout(reveal, VSL_DELAY_SECONDS * 1000);
+
+  // 2) Se o player Wistia disparar "fim do vídeo" antes, revela na hora
+  if (window._wq) {
+    window._wq.push({
+      id: '4jt6xkjixz',
+      onReady: (video) => {
+        video.bind('end', () => { clearTimeout(timer); reveal(); });
+        // Também revela se passar do tempo de delay durante a reprodução
+        video.bind('timechange', (t) => {
+          if (t >= VSL_DELAY_SECONDS) { clearTimeout(timer); reveal(); }
+        });
+      }
+    });
+  }
 }
 </script>
 </body>
